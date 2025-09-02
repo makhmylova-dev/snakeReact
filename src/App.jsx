@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import './App.css' 
+import apple from '/icons/apple.svg'
+import banana from '/icons/banana.svg'
+import diamond from '/icons/diamond.svg'
+import play from '/icons/play.svg'
+import replay from '/icons/replay.svg'
+import pause from '/icons/pause.svg'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div id='app'>
+      <header>
+        <div className='header-left'>
+          <div>
+            <img src={apple} alt="" />
+            <p>2</p>
+          </div>
+          <div>
+            <img src={banana} alt="" />
+            <p>4</p>
+          </div>
+          <div>
+            <img src={diamond} alt="" />
+            <p>7</p>
+          </div>
+        </div>
+        <div className='header-right'>
+          <button>
+            <img src={play} alt="" />
+          </button>
+          <button>
+            <img src={replay} alt="" />
+          </button>
 
-export default App
+        </div>
+      </header>
+    </div>
+  );
+};
+
+export default App;
