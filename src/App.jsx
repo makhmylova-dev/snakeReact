@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css' 
 import apple from '/icons/apple.svg'
 import banana from '/icons/banana.svg'
@@ -8,6 +8,14 @@ import replay from '/icons/replay.svg'
 import pause from '/icons/pause.svg'
 
 const App = () => {
+  const [isActive,setIsActive] = useState(false)
+
+  const startGame = () => {
+    if (isActive) {
+      setIsActive(prev => !prev)
+    }
+  }
+
   return (
     <div id='app'>
       <header>
@@ -26,8 +34,12 @@ const App = () => {
           </div>
         </div>
         <div className='header-right'>
-          <button>
-            <img src={play} alt="" />
+          <button onClick={()=>startGame()}>
+            {isActive ? (
+              <img src={pause} alt="" />
+            ) : (
+              <img src={play} alt="" />
+            )}
           </button>
           <button>
             <img src={replay} alt="" />
