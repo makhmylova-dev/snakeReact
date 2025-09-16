@@ -11,9 +11,7 @@ const App = () => {
   const [isActive,setIsActive] = useState(false)
 
   const startGame = () => {
-    if (isActive) {
       setIsActive(prev => !prev)
-    }
   }
 
   return (
@@ -41,12 +39,15 @@ const App = () => {
               <img src={play} alt="" />
             )}
           </button>
-          <button>
+          <button className='repBtn'>
             <img src={replay} alt="" />
           </button>
 
         </div>
       </header>
+      <div className='area'>
+
+      </div>
     </div>
   );
 };

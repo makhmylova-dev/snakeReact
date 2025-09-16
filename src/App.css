@@ -13,13 +13,13 @@ body{
 #app{
     width: 650px;
     height: 650px;
-    background-color: #4a752c;
+    background-color: #7baf32;
     border-radius: 12px;
 }
 header{
     height: 70px;
     width: 100%;
-    background-color: #4a752c;
+    background-color: #7baf32;
     color: #fff;
     display: flex;
     align-items: center;
@@ -74,4 +74,21 @@ header{
 }
 .header-right img{
     color: #fff;
+}
+.header-right button:hover{
+    cursor: pointer;
+}
+.repBtn:hover{
+    transform: rotate(-180deg);
+}
+.repBtn{
+    transition: all ease-in-out 0.3s;
+}
+.area{
+    height: 580px;
+    width: 100%;
+    background-color: red;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    background-image: url('/background1.jpg');
 }
