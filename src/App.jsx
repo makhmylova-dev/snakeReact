@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css' 
 import applee from '/icons/apple.svg'
-import redapple from '/icons/red-apple.svg'
-import banana from '/icons/banana.svg'
-import diamond from '/icons/diamond.svg'
+import bananna from '/icons/banana.svg'
+import diamondd from '/icons/diamond.svg'
 import play from '/icons/play.svg'
 import replay from '/icons/replay.svg'
 import pause from '/icons/pause.svg'
@@ -17,9 +16,17 @@ const App = () => {
 
   const [score,setScore] = useState(0)
 
-  const [snake,setSnake] = useState([[8,8]])
+  const [snake,setSnake] = useState([[Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)]])
 
-  const [apple,setApple] = useState([5,5])
+  const [apple,setApple] = useState([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
+
+  const [banana,setBanana] = useState([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
+
+  const [scoreBanana,setScoreBanana] = useState(0)
+
+  const [diamond,setDiamond] = useState([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
+
+  const [scoreDiamond,setScoreDiamond] = useState(0)
 
   const [direction,setDirection] = useState([1,0])
 
@@ -72,6 +79,8 @@ const App = () => {
     }
     newSnake.unshift (head)
 
+    let eatFood = false
+
 //сьесть еду
     if (
       head[0] == apple[0] && head[1] == apple[1]){
@@ -80,9 +89,35 @@ const App = () => {
       Math.floor(Math.random() * AreaSize ),
       Math.floor(Math.random() * AreaSize )
       ])
+      eatFood = true
+    } 
+    if (
+      head[0] == banana[0] && head[1] == banana[1]){
+      setScoreBanana(scoreBanana+1)
+      setBanana([
+      Math.floor(Math.random() * AreaSize ),
+      Math.floor(Math.random() * AreaSize )
+      ])
+      eatFood = true
+    } 
+    if (
+      head[0] == diamond[0] && head[1] == diamond[1]){
+      setScoreDiamond(scoreDiamond+1)
+      setDiamond([
+      Math.floor(Math.random() * AreaSize ),
+      Math.floor(Math.random() * AreaSize )
+      ])
+      eatFood = true
+    } 
+
+    if (
+      !eatFood 
+    ) 
+    {
+      newSnake.pop()
     }
 
-    newSnake.pop()
+
     setSnake (newSnake)
   }
 
@@ -90,11 +125,15 @@ const App = () => {
     setIsActive(prev => !prev)
   }
   const resetGame = () => {
-    setSnake([[8,8]])
+    setSnake([[Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)]])
     setScore(0)
+    setScoreBanana(0)
+    setScoreDiamond(0)
     setDirection([1,0])
     setIsActive(false)
-    setApple([5,5])
+    setBanana([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
+    setDiamond([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
+    setApple([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
   }
 
   return (
@@ -106,12 +145,12 @@ const App = () => {
             <p>{score}</p>
           </div>
           <div>
-            <img src={banana} alt="" />
-            <p>4</p>
+            <img src={bananna} alt="" />
+            <p>{scoreBanana}</p>
           </div>
           <div>
-            <img src={diamond} alt="" />
-            <p>7</p>
+            <img src={diamondd} alt="" />
+            <p>{scoreDiamond}</p>
           </div>
         </div>
         <div className='header-right'>
@@ -140,7 +179,7 @@ const App = () => {
           position:"absolute",
           width: GridSize,
           height: GridSize,
-          background:"limegreen",
+          background: index == 0 ?  "black" : "yellow",
           left:seg[0] *GridSize,
           top:seg[1] *GridSize,
           }}>
@@ -153,10 +192,30 @@ const App = () => {
           top:apple[1] *GridSize,
           width: GridSize,
           height: GridSize,
-          backgroundImage:`url(${redapple})`,
+          backgroundImage:`url('/icons/red-apple.svg')`,
           backgroundSize:"cover",
         }}>
+        </div>
 
+        <div style={{
+          position:"absolute",
+          left:banana[0] *GridSize,
+          top:banana[1] *GridSize,
+          width: GridSize,
+          height: GridSize,
+          backgroundImage:`url('/icons/banana.svg')`,
+          backgroundSize:"cover",
+        }}>
+        </div>
+        <div style={{
+          position:"absolute",
+          left:diamond[0] *GridSize,
+          top:diamond[1] *GridSize,
+          width: GridSize,
+          height: GridSize,
+          backgroundImage:`url('/icons/diamond.svg')`,
+          backgroundSize:"cover",
+        }}>
         </div>
 
 
