@@ -6,7 +6,7 @@ import diamondd from '/icons/diamond.svg'
 import play from '/icons/play.svg'
 import replay from '/icons/replay.svg'
 import pause from '/icons/pause.svg'
-
+import window from './window';
 
 const GridSize = 20
 const AreaSize = 29
@@ -20,32 +20,52 @@ const App = () => {
 
   const [apple,setApple] = useState([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
 
-  const [banana,setBanana] = useState([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
+  const [banana,setBanana] = useState(null)
 
   const [scoreBanana,setScoreBanana] = useState(0)
 
-  const [diamond,setDiamond] = useState([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
+  const [diamond,setDiamond] = useState(null)
 
   const [scoreDiamond,setScoreDiamond] = useState(0)
 
   const [direction,setDirection] = useState([1,0])
 
-  const intervalRef = useRef (null)
+  const nextDirection = useRef ([1,0])
+
+  const intervalRef = useRef(null)
+
+  const diamondRef = useRef(null)
+
+  const randomPos = () => [
+    Math.floor(Math.random()*AreaSize),
+    Math.floor(Math.random()*AreaSize)
+  ]
 
   useEffect (() => {
    const handleKeyDown = (e) => {
-    if (e.key == "ArrowUp" && direction[1] !== 1) {
-      setDirection([0,-1])
+    let newDir = (null)
+    if (e.key == "ArrowUp" ) {
+      newDir = [0,-1]
     }
-    if (e.key == "ArrowDown" && direction[1] !== -1) {
-      setDirection([0,1])
+    if (e.key == "ArrowDown" ) {
+      newDir = [0,1]
     }
-    if (e.key == "ArrowRight" && direction[0] !== 1) {
-      setDirection([1,0])
+    if (e.key == "ArrowRight" ) {
+      newDir = [1,0]
     }
-    if (e.key == "ArrowLeft" && direction[0] !== -1) {
-      setDirection([-1,0])
+    if (e.key == "ArrowLeft" ) {
+      newDir = [-1,0]
     }
+
+    if (newDir){
+      if (
+        newDir[0] !== -direction[0] || 
+        newDir[1] !== -direction[1]
+      ){
+        nextDirection.current = newDir
+      }
+    }
+
    }
    window.addEventListener('keydown',handleKeyDown)
    return () => window.removeEventListener ('keydown',handleKeyDown)
@@ -59,11 +79,36 @@ const App = () => {
       clearInterval(intervalRef.current)}
       return () => clearInterval(intervalRef.current) 
   },[isActive,snake,direction])
+
+  useEffect(() => {
+    if (!banana && Math.random () < 0.02) {
+      setBanana (randomPos())
+    }
+  },[snake])
+
+  useEffect (() => {
+    if (!diamond && Math.random () < 0.008) {
+      const newDiamond = randomPos()
+      setDiamond (newDiamond) 
+
+      //исчезновение 5 сек
+      if (diamondRef.current) {
+        clearTimeout (diamondRef.current)
+      }
+      diamondRef.current = setTimeout(() => {
+        setDiamond (null)
+      },5000)
+
+    }
+  },[snake])
+
   const moveSnake = () => {
+    setDirection (nextDirection.current)
     const newSnake = [...snake]
+    const dir = nextDirection.current
     const head = [
-      newSnake[0][0] + direction[0],
-      newSnake[0][1] + direction[1],
+      newSnake[0][0] + dir[0],
+      newSnake[0][1] + dir[1],
 
     ]
 
@@ -92,7 +137,7 @@ const App = () => {
       eatFood = true
     } 
     if (
-      head[0] == banana[0] && head[1] == banana[1]){
+      banana && head[0] == banana[0] && head[1] == banana[1]){
       setScoreBanana(scoreBanana+1)
       setBanana([
       Math.floor(Math.random() * AreaSize ),
@@ -101,7 +146,7 @@ const App = () => {
       eatFood = true
     } 
     if (
-      head[0] == diamond[0] && head[1] == diamond[1]){
+      diamond && head[0] == diamond[0] && head[1] == diamond[1]){
       setScoreDiamond(scoreDiamond+1)
       setDiamond([
       Math.floor(Math.random() * AreaSize ),
@@ -125,103 +170,111 @@ const App = () => {
     setIsActive(prev => !prev)
   }
   const resetGame = () => {
-    setSnake([[Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)]])
+    setSnake([randomPos(
+
+    )])
     setScore(0)
     setScoreBanana(0)
     setScoreDiamond(0)
     setDirection([1,0])
+    nextDirection.current=[1,0]
     setIsActive(false)
-    setBanana([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
-    setDiamond([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
-    setApple([Math.floor(Math.random()*AreaSize),Math.floor(Math.random()*AreaSize)])
+    setBanana(null)
+    setDiamond(null)
+    setApple(randomPos())
   }
 
   return (
-    <div id='app'>
-      <header>
-        <div className='header-left'>
-          <div>
-            <img src={applee} alt="" />
-            <p>{score}</p>
-          </div>
-          <div>
-            <img src={bananna} alt="" />
-            <p>{scoreBanana}</p>
-          </div>
-          <div>
-            <img src={diamondd} alt="" />
-            <p>{scoreDiamond}</p>
-          </div>
-        </div>
-        <div className='header-right'>
-          <button onClick={startGame}>
-            {isActive ? (
-              <img src={pause} alt="" />
-            ) : (
-              <img src={play} alt="" />
-            )}
-          </button>
-          <button onClick={resetGame} className='repBtn'>
-            <img src={replay} alt="" />
-          </button>
+    <window/>
+    // <div id='app'>
+    //   <header>
+    //     <div className='header-left'>
+    //       <div>
+    //         <img src={applee} alt="" />
+    //         <p>{score}</p>
+    //       </div>
+    //       <div>
+    //         <img src={bananna} alt="" />
+    //         <p>{scoreBanana}</p>
+    //       </div>
+    //       <div>
+    //         <img src={diamondd} alt="" />
+    //         <p>{scoreDiamond}</p>
+    //       </div>
+    //     </div>
+    //     <div className='header-right'>
+    //       <button onClick={startGame}>
+    //         {isActive ? (
+    //           <img src={pause} alt="" />
+    //         ) : (
+    //           <img src={play} alt="" />
+    //         )}
+    //       </button>
+    //       <button onClick={resetGame} className='repBtn'>
+    //         <img src={replay} alt="" />
+    //       </button>
 
-        </div>
-      </header>
-      <div className='area' style={{
-        position: "relative",
-        width: AreaSize*GridSize + 80,
-        height: AreaSize*GridSize
-      }}>
+    //     </div>
+    //   </header>
+    //   <div className='area' style={{
+    //     position: "relative",
+    //     width: AreaSize*GridSize ,
+    //     height: AreaSize*GridSize 
+    //   }}>
 
-        {snake.map((seg,index) => (
+    //     {snake.map((seg,index) => (
 
-        <div  key={index} style = {{
-          position:"absolute",
-          width: GridSize,
-          height: GridSize,
-          background: index == 0 ?  "black" : "yellow",
-          left:seg[0] *GridSize,
-          top:seg[1] *GridSize,
-          }}>
-        </div>
-        ))}
+    //     <div  key={index} style = {{
+    //       position:"absolute",
+    //       width: GridSize,
+    //       height: GridSize,
+    //       background: index == 0 ?  "black" : "yellow",
+    //       left:seg[0] *GridSize,
+    //       top:seg[1] *GridSize,
+    //       borderRadius:'150px',
+    //       }}>
+    //     </div>
+    //     ))}
           
-        <div style={{
-          position:"absolute",
-          left:apple[0] *GridSize,
-          top:apple[1] *GridSize,
-          width: GridSize,
-          height: GridSize,
-          backgroundImage:`url('/icons/red-apple.svg')`,
-          backgroundSize:"cover",
-        }}>
-        </div>
+    //     <div style={{
+    //       position:"absolute",
+    //       left:apple[0] *GridSize,
+    //       top:apple[1] *GridSize,
+    //       width: GridSize,
+    //       height: GridSize,
+    //       backgroundImage:`url('/icons/red-apple.svg')`,
+    //       backgroundSize:"cover",
+    //     }}>
+    //     </div>
 
-        <div style={{
-          position:"absolute",
-          left:banana[0] *GridSize,
-          top:banana[1] *GridSize,
-          width: GridSize,
-          height: GridSize,
-          backgroundImage:`url('/icons/banana.svg')`,
-          backgroundSize:"cover",
-        }}>
-        </div>
-        <div style={{
-          position:"absolute",
-          left:diamond[0] *GridSize,
-          top:diamond[1] *GridSize,
-          width: GridSize,
-          height: GridSize,
-          backgroundImage:`url('/icons/diamond.svg')`,
-          backgroundSize:"cover",
-        }}>
-        </div>
+    //     {banana && (
+    //       <div style={{
+    //       position:"absolute",
+    //       left:banana[0] *GridSize,
+    //       top:banana[1] *GridSize,
+    //       width: GridSize,
+    //       height: GridSize,
+    //       backgroundImage:`url('/icons/banana.svg')`,
+    //       backgroundSize:"cover",
+    //       }}>
+    //       </div>
+    //     )}
 
+    //     {diamond && (
+    //       <div style={{
+    //       position:"absolute",
+    //       left:diamond[0] *GridSize,
+    //       top:diamond[1] *GridSize,
+    //       width: GridSize,
+    //       height: GridSize,
+    //       backgroundImage:`url('/icons/diamond.svg')`,
+    //       backgroundSize:"cover",
+    //       }}>
+    //      </div>
+    //     )}
 
-
-      </div>
-    </div>
+    //   </div>
+    // </div>
   );
 };
 
