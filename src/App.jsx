@@ -6,7 +6,7 @@ import diamondd from '/icons/diamond.svg'
 import play from '/icons/play.svg'
 import replay from '/icons/replay.svg'
 import pause from '/icons/pause.svg'
-import Window from './Window';
+import Window from './window';
 
 const GridSize = 20
 const AreaSize = 29
