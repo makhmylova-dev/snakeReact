@@ -2,6 +2,7 @@ body{
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    font-family: "Winky Sans", sans-serif;
 }
 #root{
     width: 100%;
@@ -13,15 +14,82 @@ body{
 #window{
     width: 500px;
     height: 500px;
-    box-shadow: 0px 0px 12px rgba(35, 31, 31, 0.536);
-    background-color: #7baf32;
+    box-shadow: 0px 0px 8px rgba(35, 31, 31, 0.536);
+    background: linear-gradient(145deg,rgba(224, 0, 245, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 227, 83, 1) 100%);
+    border-radius: 12px;
+    top: 100px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+#window h3{
+    width: 100%;
+    text-align: center;
+    font-weight: 700;
+    font-size: 50px;
+    color: #ffffffe1;
+}
+#window h4{
+    width: 100%;
+    text-align: center;
+    font-weight: 700;
+    font-size: 30px;
+    margin: 0px 0px 25px 0px;
+    color: #ffffff;
+}
+.window_info{
+    width: 90%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 0px 12px rgba(94, 90, 90, 0.378);
+    border-radius: 12px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.window_info div{
+    width: 150px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.window_info img{
+    width: 50px;
+    height: 50px;
+   
+}
+.window_info p{
+    font-weight: 700;
+    font-size: 30px;
+    color: rgb(65, 67, 20);
+}
+#window button{
+    width: 120px;
+    height: 120px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+#window button:hover{
+    transform: rotate(-260deg);
+}
+#window svg{
+    color: #fff;
 }
 #app{
     width: 580px;
     height: 580px;
     background-color: #7baf32;
     border-radius: 12px;
-    display: none;
 }
 header{
     height: 70px;

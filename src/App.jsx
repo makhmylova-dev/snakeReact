@@ -6,7 +6,7 @@ import diamondd from '/icons/diamond.svg'
 import play from '/icons/play.svg'
 import replay from '/icons/replay.svg'
 import pause from '/icons/pause.svg'
-import window from './window';
+import Window from './Window';
 
 const GridSize = 20
 const AreaSize = 29
@@ -36,10 +36,19 @@ const App = () => {
 
   const diamondRef = useRef(null)
 
+  const [isWin,setIsWin] = useState(false)
+
   const randomPos = () => [
     Math.floor(Math.random()*AreaSize),
     Math.floor(Math.random()*AreaSize)
   ]
+
+  useEffect (() => {
+    if (scoreBanana>=3 && scoreDiamond>=1 && score>=10) {
+      setIsActive (false)
+      setIsWin (true)
+    }
+  },[scoreBanana,scoreDiamond,score])
 
   useEffect (() => {
    const handleKeyDown = (e) => {
@@ -126,6 +135,8 @@ const App = () => {
 
     let eatFood = false
 
+  
+
 //сьесть еду
     if (
       head[0] == apple[0] && head[1] == apple[1]){
@@ -182,99 +193,105 @@ const App = () => {
     setBanana(null)
     setDiamond(null)
     setApple(randomPos())
+    setIsWin(false)
   }
 
   return (
-    <window/>
-    // <div id='app'>
-    //   <header>
-    //     <div className='header-left'>
-    //       <div>
-    //         <img src={applee} alt="" />
-    //         <p>{score}</p>
-    //       </div>
-    //       <div>
-    //         <img src={bananna} alt="" />
-    //         <p>{scoreBanana}</p>
-    //       </div>
-    //       <div>
-    //         <img src={diamondd} alt="" />
-    //         <p>{scoreDiamond}</p>
-    //       </div>
-    //     </div>
-    //     <div className='header-right'>
-    //       <button onClick={startGame}>
-    //         {isActive ? (
-    //           <img src={pause} alt="" />
-    //         ) : (
-    //           <img src={play} alt="" />
-    //         )}
-    //       </button>
-    //       <button onClick={resetGame} className='repBtn'>
-    //         <img src={replay} alt="" />
-    //       </button>
+    isWin ? (
+      <Window apple={score} diamond={scoreDiamond} banana={scoreBanana} restart={resetGame}/>  
+    ) : (
+    <div id='app'>
+      <header>
+        <div className='header-left'>
+          <div>
+            <img src={applee} alt="" />
+            <p>{score}</p>
+          </div>
+          <div>
+            <img src={bananna} alt="" />
+            <p>{scoreBanana}</p>
+          </div>
+          <div>
+            <img src={diamondd} alt="" />
+            <p>{scoreDiamond}</p>
+          </div>
+        </div>
+        <div className='header-right'>
+          <button onClick={startGame}>
+            {isActive ? (
+              <img src={pause} alt="" />
+            ) : (
+              <img src={play} alt="" />
+            )}
+          </button>
+          <button onClick={resetGame} className='repBtn'>
+            <img src={replay} alt="" />
+          </button>
 
-    //     </div>
-    //   </header>
-    //   <div className='area' style={{
-    //     position: "relative",
-    //     width: AreaSize*GridSize ,
-    //     height: AreaSize*GridSize 
-    //   }}>
+        </div>
+      </header>
+      <div className='area' style={{
+        position: "relative",
+        width: AreaSize*GridSize ,
+        height: AreaSize*GridSize 
+      }}>
 
-    //     {snake.map((seg,index) => (
+        {snake.map((seg,index) => (
 
-    //     <div  key={index} style = {{
-    //       position:"absolute",
-    //       width: GridSize,
-    //       height: GridSize,
-    //       background: index == 0 ?  "black" : "yellow",
-    //       left:seg[0] *GridSize,
-    //       top:seg[1] *GridSize,
-    //       borderRadius:'150px',
-    //       }}>
-    //     </div>
-    //     ))}
+        <div  key={index} style = {{
+          position:"absolute",
+          width: GridSize,
+          height: GridSize,
+          background: index == 0 ?  "black" : "yellow",
+          left:seg[0] *GridSize,
+          top:seg[1] *GridSize,
+          borderRadius:'150px',
+          }}>
+        </div>
+        ))}
           
-    //     <div style={{
-    //       position:"absolute",
-    //       left:apple[0] *GridSize,
-    //       top:apple[1] *GridSize,
-    //       width: GridSize,
-    //       height: GridSize,
-    //       backgroundImage:`url('/icons/red-apple.svg')`,
-    //       backgroundSize:"cover",
-    //     }}>
-    //     </div>
+        <div style={{
+          position:"absolute",
+          left:apple[0] *GridSize,
+          top:apple[1] *GridSize,
+          width: GridSize,
+          height: GridSize,
+          backgroundImage:`url('/icons/red-apple.svg')`,
+          backgroundSize:"cover",
+        }}>
+        </div>
 
-    //     {banana && (
-    //       <div style={{
-    //       position:"absolute",
-    //       left:banana[0] *GridSize,
-    //       top:banana[1] *GridSize,
-    //       width: GridSize,
-    //       height: GridSize,
-    //       backgroundImage:`url('/icons/banana.svg')`,
-    //       backgroundSize:"cover",
-    //       }}>
-    //       </div>
-    //     )}
+        {banana && (
+          <div style={{
+          position:"absolute",
+          left:banana[0] *GridSize,
+          top:banana[1] *GridSize,
+          width: GridSize,
+          height: GridSize,
+          backgroundImage:`url('/icons/banana.svg')`,
+          backgroundSize:"cover",
+          }}>
+          </div>
+        )}
 
-    //     {diamond && (
-    //       <div style={{
-    //       position:"absolute",
-    //       left:diamond[0] *GridSize,
-    //       top:diamond[1] *GridSize,
-    //       width: GridSize,
-    //       height: GridSize,
-    //       backgroundImage:`url('/icons/diamond.svg')`,
-    //       backgroundSize:"cover",
-    //       }}>
-    //      </div>
-    //     )}
+        {diamond && (
+          <div style={{
+          position:"absolute",
+          left:diamond[0] *GridSize,
+          top:diamond[1] *GridSize,
+          width: GridSize,
+          height: GridSize,
+          backgroundImage:`url('/icons/diamond.svg')`,
+          backgroundSize:"cover",
+          }}>
+         </div>
+        )}
 
-    //   </div>
-    // </div>
+      </div>
+    </div>
+    ) 
+    
+   
   );
 };
 
